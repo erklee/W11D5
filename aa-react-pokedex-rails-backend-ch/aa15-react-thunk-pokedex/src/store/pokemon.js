@@ -46,6 +46,38 @@ export const getPokemonTypes = () => async dispatch => {
   }
 };
 
+export const createPokemon = (pokemon) => async dispatch => {
+  const response = await fetch(`/api/pokemon`, { 
+    method: 'POST',
+    body: JSON.stringify(pokemon),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json' 
+    }
+  });
+
+  if (response.ok) {
+    const newPokemon = await response.json();
+    dispatch(addOnePokemon(newPokemon));
+  }
+};
+
+export const editPokemon = (pokemon) => async dispatch => {
+  const response = await fetch(`/api/pokemon/${pokemon.id}/`, {
+    method: 'PATCH',
+    body: JSON.stringify(pokemon),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  });
+
+  if (response.ok) {
+    const newPokemon = await response.json();
+    dispatch(addOnePokemon(newPokemon));
+  }
+};
+
 const initialState = {
   list: [],
   types: []
@@ -122,14 +154,6 @@ const pokemonReducer = (state = initialState, action) => {
           items: [...state[action.item.pokemonId].items, action.item.id]
         }
       };
-      // case FIND_ONE: 
-      // return {
-      //   ...state,
-      //   [action.pokemonId]: {
-      //     ...state[action.pokemonId],
-      //     pokemon: action.pokemon.map(item => item.id)
-      //   }
-      // }; 
     default:
       return state;
   }
